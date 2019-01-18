@@ -59,7 +59,7 @@
   </div>
 </template>
 <script>
-import NotificationTemplate from './Notifications/NotificationTemplate';
+import { sendPost } from '@/utils/api'
 
 export default {
   data() {
@@ -71,7 +71,21 @@ export default {
   },
   methods: {
     loginAction() {
-      localStorage.setItem('authenticated', true)
+      sendPost('/login', {
+        email: this.userEmail,
+        password: this.userPassword,
+      })
+      .then(response => {
+        if (response.data.success) {
+          localStorage.setItem('Authenticated', true);
+          this.$router.push('/dashboard');
+        } else {
+          alert('Credential error');
+        }
+      })
+      .catch(error => {
+        console.log(error);
+      })
     }
   }
 };

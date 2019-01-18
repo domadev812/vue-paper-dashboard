@@ -1,11 +1,22 @@
 <template>
-  <div>
-
+  <div class="dashboard-page">
+    <div class="row">
+      <div class="col-12 d-flex justify-content-end mb-4">
+        <el-date-picker
+          v-model="dateRange"
+          type="daterange"
+          range-separator="To"
+          start-placeholder="Start date"
+          end-placeholder="End date"
+          @change="changeDateRange">
+        </el-date-picker>
+      </div>
+    </div>
     <!--Stats cards-->
     <div class="row">
       <div class="col-md-6 col-xl-3" v-for="stats in statsCards" :key="stats.title">
         <stats-card>
-          <div class="icon-big text-center" :class="`icon-${stats.type}`" slot="header">
+          <div class="icon-big text-center" :class="`icon-${stats.cardType}`" slot="header">
             <i :class="stats.icon"></i>
           </div>
           <div class="numbers" slot="content">
@@ -75,10 +86,17 @@
 <script>
 import { StatsCard, ChartCard } from "@/components/index";
 import Chartist from 'chartist';
+import Moment from 'moment'
+import {
+  DatePicker as ElDatePicker
+} from 'element-ui';
+import { sendGet } from '@/utils/api'
+
 export default {
   components: {
     StatsCard,
-    ChartCard
+    ChartCard,
+    ElDatePicker,
   },
   /**
    * Chart data used to render stats, charts. Should be replaced with server data
@@ -87,7 +105,7 @@ export default {
     return {
       statsCards: [
         {
-          type: "warning",
+          cardType: "warning",
           icon: "ti-server",
           title: "Capacity",
           value: "105GB",
@@ -95,7 +113,7 @@ export default {
           footerIcon: "ti-reload"
         },
         {
-          type: "success",
+          cardType: "success",
           icon: "ti-wallet",
           title: "Revenue",
           value: "$1,345",
@@ -103,7 +121,7 @@ export default {
           footerIcon: "ti-calendar"
         },
         {
-          type: "danger",
+          cardType: "danger",
           icon: "ti-pulse",
           title: "Errors",
           value: "23",
@@ -111,7 +129,7 @@ export default {
           footerIcon: "ti-timer"
         },
         {
-          type: "info",
+          cardType: "info",
           icon: "ti-twitter-alt",
           title: "Followers",
           value: "+45",
@@ -187,10 +205,40 @@ export default {
           series: [62, 32, 6]
         },
         options: {}
-      }
+      },
+      dateRange: null,
     };
+  },
+
+  methods: {
+    changeDateRange() {
+      if (this.dateRange) {
+        const startDate = Moment(this.dateRange[0]).format('YYYY-MM-DD');
+        const endDate = Moment(this.dateRange[1]).format('YYYY-MM-DD');
+        this.getDashboardData(startDate, endDate);
+      }
+    },
+
+    getDashboardData(startDate, endDate) {
+      sendGet(`/dashboard-data?startDate=${startDate}&endDate=${endDate}`)
+      .then(response => {
+        if (response.data) {
+          this.statsCards = response.data.statsCardData;
+          this.preferencesChart.data = response.data.preferencesChartData;
+          console.log(this.preferencesChart);
+        }
+      })
+      .catch(error => {
+        console.log(error);
+      })
+    }
   }
 };
 </script>
-<style>
+<style lang="scss">
+  .dashboard-page {
+    .el-date-editor .el-range-separator {
+      width: 7%;
+    }
+  }
 </style>

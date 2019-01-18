@@ -10,9 +10,12 @@
     "dev": "vue-cli-service serve --open"
   },
   "dependencies": {
+    "axios": "^0.18.0",
     "bootstrap": "^4.0.0",
     "chartist": "^0.11.0",
+    "element-ui": "^2.4.11",
     "es6-promise": "^4.2.4",
+    "moment": "^2.23.0",
     "vue": "^2.5.13",
     "vue-clickaway": "^2.1.0",
     "vue-notifyjs": "^0.3.0",

@@ -1,3 +1,4 @@
+const prod = process.env.NODE_ENV === "production";
 module.exports = {
-  lintOnSave: false
+  baseUrl: prod ? "https://app.production.com" : "http://localhost:5500"
 };
