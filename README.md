@@ -16,5 +16,5 @@ yarn run build
 ```
 ### lint
 ```
-npm run lint
+yarn run lint
 ```
