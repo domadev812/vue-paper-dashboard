@@ -2,6 +2,8 @@ import DashboardLayout from "@/layout/dashboard/DashboardLayout.vue";
 // GeneralViews
 import NotFound from "@/pages/NotFoundPage.vue";
 
+// Login Page
+import Login from "@/pages/Login.vue";
 // Admin pages
 import Dashboard from "@/pages/Dashboard.vue";
 import UserProfile from "@/pages/UserProfile.vue";
@@ -13,9 +15,12 @@ import TableList from "@/pages/TableList.vue";
 
 const routes = [
   {
+    path: '/login',
+    component: Login,
+  },
+  {
     path: "/",
     component: DashboardLayout,
-    redirect: "/dashboard",
     children: [
       {
         path: "dashboard",
